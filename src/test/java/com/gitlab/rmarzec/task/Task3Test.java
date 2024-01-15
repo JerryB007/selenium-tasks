@@ -4,12 +4,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.text.MessageFormat;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,23 +14,16 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 public class Task3Test extends BaseTest {
-    public static final String GOOGLE_PAGE_URL = "https://www.google.com/";
+    private static final String GOOGLE_PAGE_URL = "https://www.google.com/";
     private static final String W3_PAGE_URL = "https://www.w3schools.com/tags/tag_select.asp";
 
-    private WebDriverWait wait;
-
-    @BeforeMethod
-    void beforeTest() {
-        wait = new WebDriverWait(webDriver, Duration.ofSeconds(3));
-    }
-
     @Test
-    public void givenHappyShotPage_whenTryItYoutself_thenOK() {
+    void givenHappyShotPage_whenTryItYourself_thenOK() {
         webDriver.get(GOOGLE_PAGE_URL);
-        acceptCookieByButtonClick(By.id("L2AGLb"));
+        acceptCookieByClick(By.id("L2AGLb"));
 
-        WebElement searchBox = webDriver.findElement(By.id("APjFqb"));
-        WebElement luckyButton = webDriver.findElement(By.name("btnI"));
+        final WebElement searchBox = webDriver.findElement(By.id("APjFqb"));
+        final WebElement luckyButton = webDriver.findElement(By.name("btnI"));
 
         final By w3SchoolAcceptCookieBtn = By.id("accept-choices");
         searchBox.sendKeys("HTML select tag - W3Schools");
@@ -49,35 +39,31 @@ public class Task3Test extends BaseTest {
             }
         }
 
-        String currentUrl = webDriver.getCurrentUrl();
+        final String currentUrl = webDriver.getCurrentUrl();
         assertEquals(W3_PAGE_URL, currentUrl);
+        acceptCookieByClick(w3SchoolAcceptCookieBtn);
 
-        acceptCookieByButtonClick(w3SchoolAcceptCookieBtn);
+        final WebElement firstTryItButton = webDriver.findElement(By.xpath("//a[@href='tryit.asp?filename=tryhtml_select']"));
+        firstTryItButton.click();
 
-        WebElement firstTryIt = webDriver.findElement(By.xpath("//a[@href='tryit.asp?filename=tryhtml_select']"));
-        firstTryIt.click();
-
-        List<String> tabs = new ArrayList<>(webDriver.getWindowHandles());
+        final List<String> tabs = new ArrayList<>(webDriver.getWindowHandles());
         webDriver.switchTo().window(tabs.get(1));
 
         wait.until(ExpectedConditions.urlContains("https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_select"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("iframeResult")));
 
         webDriver.switchTo().frame("iframeResult");
 
-        WebElement headerH1 = webDriver.findElement(By.tagName("h1"));
+        final WebElement headerH1 = webDriver.findElement(By.tagName("h1"));
         System.out.println("headerH1.text: " + headerH1.getText());
         assertEquals("The select element", headerH1.getText());
 
-        WebElement selectCars = webDriver.findElement(By.id("cars"));
-        selectCars.sendKeys("opel");
+        final WebElement carsComboBox = webDriver.findElement(By.id("cars"));
+        carsComboBox.sendKeys("opel");
 
-        WebElement optionOpel = selectCars.findElement(By.xpath("//option[@value='opel']"));
-        assertTrue(optionOpel.isSelected());
-        System.out.println("optionOpel.value: " + optionOpel.getAttribute("value") + "; optionOpel.text: " + optionOpel.getText());
+        final WebElement opelOption = carsComboBox.findElement(By.xpath("//option[@value='opel']"));
+        assertTrue(opelOption.isSelected());
+        System.out.println("option.value: " + opelOption.getAttribute("value") + "; option.text: " + opelOption.getText());
     }
 
-    private void acceptCookieByButtonClick(By locator) {
-        wait.until(ExpectedConditions.elementToBeClickable(locator)).click();
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
-    }
 }
