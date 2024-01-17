@@ -2,6 +2,7 @@ package com.gitlab.rmarzec.task;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.Test;
 
 import java.util.List;
@@ -15,7 +16,10 @@ public class Task2Test extends BaseTest {
     void givenWikiPage_whenGetLanguageList_thenListSizeCorrect() {
         webDriver.get(WIKI_PAGE_URL);
 
-        final List<WebElement> langList = webDriver.findElements(By.cssSelector(".interlanguage-link"));
+        final By langLocator = By.cssSelector(".interlanguage-link");
+        wait.until(ExpectedConditions.presenceOfElementLocated(langLocator));
+
+        final List<WebElement> langList = webDriver.findElements(langLocator);
         assertEquals(langList.size(), 143);
 
         for (WebElement lang : langList) {

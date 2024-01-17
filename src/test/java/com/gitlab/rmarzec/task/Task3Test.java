@@ -22,11 +22,10 @@ public class Task3Test extends BaseTest {
         webDriver.get(GOOGLE_PAGE_URL);
         acceptCookieByClick(By.id("L2AGLb"));
 
-        final WebElement searchBox = webDriver.findElement(By.id("APjFqb"));
+        final WebElement searchInput = webDriver.findElement(By.id("APjFqb"));
         final WebElement luckyButton = webDriver.findElement(By.name("btnI"));
 
-        final By w3SchoolAcceptCookieBtn = By.id("accept-choices");
-        searchBox.sendKeys("HTML select tag - W3Schools");
+        searchInput.sendKeys("HTML select tag - W3Schools");
         luckyButton.submit();
 
         try {
@@ -41,7 +40,8 @@ public class Task3Test extends BaseTest {
 
         final String currentUrl = webDriver.getCurrentUrl();
         assertEquals(W3_PAGE_URL, currentUrl);
-        acceptCookieByClick(w3SchoolAcceptCookieBtn);
+        final By w3SchoolAcceptCookieButton = By.id("accept-choices");
+        acceptCookieByClick(w3SchoolAcceptCookieButton);
 
         final WebElement firstTryItButton = webDriver.findElement(By.xpath("//a[@href='tryit.asp?filename=tryhtml_select']"));
         firstTryItButton.click();
@@ -53,15 +53,16 @@ public class Task3Test extends BaseTest {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("iframeResult")));
 
         webDriver.switchTo().frame("iframeResult");
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("cars")));
 
-        final WebElement headerH1 = webDriver.findElement(By.tagName("h1"));
-        System.out.println("headerH1.text: " + headerH1.getText());
-        assertEquals("The select element", headerH1.getText());
+        final WebElement h1Header = webDriver.findElement(By.tagName("h1"));
+        System.out.println("headerH1.text: " + h1Header.getText());
+        assertEquals("The select element", h1Header.getText());
 
-        final WebElement carsComboBox = webDriver.findElement(By.id("cars"));
-        carsComboBox.sendKeys("opel");
+        final WebElement carsDropdown = webDriver.findElement(By.id("cars"));
+        carsDropdown.sendKeys("opel");
 
-        final WebElement opelOption = carsComboBox.findElement(By.xpath("//option[@value='opel']"));
+        final WebElement opelOption = carsDropdown.findElement(By.xpath("//option[@value='opel']"));
         assertTrue(opelOption.isSelected());
         System.out.println("option.value: " + opelOption.getAttribute("value") + "; option.text: " + opelOption.getText());
     }

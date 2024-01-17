@@ -45,7 +45,7 @@ public class Task4Test extends BaseTest {
         }
 
         assertEquals(12, result.size());
-        // result.forEach(System.out::println);
+//        result.forEach(System.out::println);
 
         result.stream()
                 .filter(tile -> !tile.isLive())
